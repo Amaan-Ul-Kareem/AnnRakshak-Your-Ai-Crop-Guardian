@@ -1,0 +1,1019 @@
+{
+  "name": "AnnRakshak: Your Ai Crop Guardian",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        528,
+        64
+      ],
+      "id": "c64c4f86-f866-4533-a120-96406eb5ce90",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "wm08nua0bvTM9byy",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "=\nYou are **AnnRakshak**, an expert AI food technologist with specialized training in supply chain monitoring and visual analysis of fresh produce. Your primary function is to analyze an image of produce, combine it with user-provided context and live weather data, and deliver a precise, actionable report to prevent spoilage. Your tone must be expert, supportive, and clear.\n*Remember-Reply in {{ $('Crop Description1').item.json.data['Which language would you prefer for our conversation? By default, I will reply in Hindi.(आप हमारी बातचीत के लिए कौन सी भाषा पसंद करेंगे? डिफ़ॉल्ट रूप से, मैं हिंदी में जवाब दूँगा।)'] }} language if not mention then in Hindi.*\n*Note-Give Summary of Answer at last.*\n**CONTEXT:**\nYou will be provided with three critical inputs:\n1.  **Produce Image:** The user will upload an image of their stored produce.\n2.  **User's Description:** \n{{ $('Crop Description1').item.json.data['To give you the best analysis, please provide all the following details about your produce in a single message:  1. Produce Details: Name, variety (if known), and approximate quantity (example: Tomatoes, Desi variety, 50 kg). 2. Condition: Describe its texture (firm, soft, wrinkled) and any unusual smell (sour, musty). Also, please mention the harvest or purchase date. 3. Storage and Location: Tell me how it is stored (example: cold storage, open shed, jute bags). 4. Your Main Question: What is your primary concern? (example: How long will this last, How can I stop the black spots, Is this safe to sell).  (आपको सबसे अच्छा विश्लेषण देने के लिए, कृपया एक ही संदेश में अपनी उपज के बारे में निम्नलिखित सभी विवरण प्रदान करें:  1. उपज का विवरण: नाम, किस्म (यदि ज्ञात हो), और अनुमानित मात्रा (उदाहरण: टमाटर, देसी किस्म, 50 किलो)। 2. स्थिति: इसकी बनावट (ठोस, नरम, झुर्रीदार) और किसी भी असामान्य गंध (खट्टी, सीलन) का वर्णन करें। साथ ही, कृपया कटाई या खरीद की तारीख बताएं। 3. भंडारण और स्थान: मुझे बताएं कि इसे कैसे संग्रहीत किया गया है (उदाहरण: कोल्ड स्टोरेज, खुला शेड, जूट की बोरियां)। 4. आपका मुख्य प्रश्न: आपकी मुख्य चिंता क्या है? (उदाहरण: यह कितने समय तक चलेगा, मैं काले धब्बों को कैसे रोक सकता हूँ, क्या इसे बेचना सुरक्षित है))'] }}\n3.  **Live Weather Data:**\n{{ $('Message a model1').item.json.message.content }}\n**TASK:**\nYour task is to perform an expert-level multimodal analysis.\n1.  **Visually analyze the attached image:** Identify the produce type, and look for specific indicators of freshness or decay (e.g., color, wilting, mold, bruising, insect damage, shriveling).\n2.  **Synthesize:** Integrate your visual findings with the user's description and the provided weather data. High temperature and humidity in the weather data are critical risk factors.\n3.  **Generate a Report:** Create a clear, point-wise response in the language specified by the user: . If no language is specified, default to **Hindi**.\n\n**RESPONSE FORMAT:**\nGenerate the response using the following markdown structure precisely. Do not deviate from these headings.\n\n***\n\n**🌿 AnnRakshak Visual Analysis Report (अन्नरक्षक विज़ुअल विश्लेषण रिपोर्ट) 🌿**\n\n**1. Visual Assessment (विज़ुअल मूल्यांकन):**\n*   **Produce Identified:** [Identify the produce from the image, e.g., \"Tomatoes,\" \"Potatoes,\" \"Leafy Greens.\"]\n*   **Key Visual Observations:** [Describe what you see in the image, e.g., \"Uniformly red color with firm-looking skin,\" \"Minor surface bruising on approximately 10% of items,\" \"Early signs of wilting on outer leaves,\" \"Small, isolated patches of white mold visible.\"]\n\n**2. Estimated Shelf Life (अनुमानित शेल्फ लाइफ):**\n*   **Estimated Remaining Shelf Life:** [Provide a specific time frame, e.g., \"4-5 days,\" \"Less than 24 hours,\" \"5-6 days under optimal conditions.\"]\n*   **Rationale:** [Explain your reasoning, e.g., \"Based on the visual firmness and the user's storage duration, combined with upcoming cooler temperatures...\"]\n\n**3. Spoilage Risk Assessment (खराब होने का जोखिम):**\n*   **Current Risk Level:** [Choose one: **Low**, **Medium**, or **High**.]\n*   **Primary Threats:** [List the main risks based on all inputs, e.g., \"High risk of bacterial rot due to visible bruising and high humidity forecast,\" \"Risk of accelerated ripening from high ambient temperatures,\" \"Potential for mold spread from observed patches.\"]\n\n**4. Actionable Recommendations (कार्यवाही के लिए सुझाव):**\n*   **Optimal Storage Conditions:** [Provide specific environmental parameters. e.g., \"Aim for a temperature of 8-12°C and relative humidity of 85-90%.\"]\n*   **Immediate Actions:** [Give urgent, practical advice. e.g., \"Immediately sort the batch to remove all bruised and moldy items,\" \"Improve ventilation around the crates to reduce humidity buildup.\"]\n*   **Packaging & Transport:** [Recommend best practices. e.g., \"Use ventilated crates for transport,\" \"Avoid stacking more than three layers high to prevent compression damage.\"]\n\n**5. 🔴 Urgent Alerts (तत्काल चेतावनी):**\n*   [If a critical, immediate threat is visible, state it clearly. For example: \"🔴 **IMMEDIATE ACTION REQUIRED:** Mold is clearly visible in the image. This requires immediate separation and inspection of the entire batch to prevent total loss.\"]\n*   [If no critical threats are visible, state: \"No urgent alerts based on the visual evidence. Follow the recommendations above to maximize freshness",
+        "inputType": "binary",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        688,
+        192
+      ],
+      "id": "06cd325e-d0d1-417d-a43f-c704c8e1e875",
+      "name": "Analyze image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "S0s1AM38bagCrSpe",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $json.message.chat.id }}",
+        "message": "Welcome to AnnRakshak! 🌱\n\nI'm here to help you assess your produce and prevent spoilage. To get started, please fill out this short form with details about your produce. It will only take a minute.\nYou don't have to fill out all the details, but providing more information will help me give you the most accurate recommendations. Once you submit, I'll analyze the information and provide a real-time assessment.\n\nअन्नरक्षक में आपका स्वागत है! 🌱\n\nमैं आपकी उपज का मूल्यांकन करने और उसे खराब होने से बचाने में मदद करने के लिए यहाँ हूँ। शुरू करने के लिए, कृपया इस छोटे से फॉर्म को अपनी उपज के विवरण के साथ भरें। इसमें केवल एक मिनट लगेगा।\nआपको सभी विवरण भरने की आवश्यकता नहीं है, लेकिन अधिक जानकारी प्रदान करने से मुझे आपको सबसे सटीक सुझाव देने में मदद मिलेगी। फॉर्म जमा करने के बाद, मैं जानकारी का विश्लेषण करूँगा और आपको तुरंत मूल्यांकन प्रदान करूँगा।",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Which language would you prefer for our conversation? By default, I will reply in Hindi.(आप हमारी बातचीत के लिए कौन सी भाषा पसंद करेंगे? डिफ़ॉल्ट रूप से, मैं हिंदी में जवाब दूँगा।)",
+              "placeholder": "Haryanvi (हरियाणवी),Punjabi (ਪੰਜਾਬੀ / पंजाबी),Gujarati (ગુજરાતી / गुजराती)...."
+            },
+            {
+              "fieldLabel": "To give you the best analysis, please provide all the following details about your produce in a single message:  1. Produce Details: Name, variety (if known), and approximate quantity (example: Tomatoes, Desi variety, 50 kg). 2. Condition: Describe its texture (firm, soft, wrinkled) and any unusual smell (sour, musty). Also, please mention the harvest or purchase date. 3. Storage and Location: Tell me how it is stored (example: cold storage, open shed, jute bags). 4. Your Main Question: What is your primary concern? (example: How long will this last, How can I stop the black spots, Is this safe to sell).  (आपको सबसे अच्छा विश्लेषण देने के लिए, कृपया एक ही संदेश में अपनी उपज के बारे में निम्नलिखित सभी विवरण प्रदान करें:  1. उपज का विवरण: नाम, किस्म (यदि ज्ञात हो), और अनुमानित मात्रा (उदाहरण: टमाटर, देसी किस्म, 50 किलो)। 2. स्थिति: इसकी बनावट (ठोस, नरम, झुर्रीदार) और किसी भी असामान्य गंध (खट्टी, सीलन) का वर्णन करें। साथ ही, कृपया कटाई या खरीद की तारीख बताएं। 3. भंडारण और स्थान: मुझे बताएं कि इसे कैसे संग्रहीत किया गया है (उदाहरण: कोल्ड स्टोरेज, खुला शेड, जूट की बोरियां)। 4. आपका मुख्य प्रश्न: आपकी मुख्य चिंता क्या है? (उदाहरण: यह कितने समय तक चलेगा, मैं काले धब्बों को कैसे रोक सकता हूँ, क्या इसे बेचना सुरक्षित है))",
+              "placeholder": "Describe your crop condition (अपनी फसल की स्थिति का वर्णन करें)"
+            },
+            {
+              "fieldLabel": "Your city?(आपका शहर)",
+              "placeholder": "Meerut (मेरठ),Ludhiana (लुधियाना),Nagpur (नागपुर)...",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        -80
+      ],
+      "id": "e151e83a-c44b-445a-bf8b-e2a1be3452b7",
+      "name": "Crop Description",
+      "webhookId": "14d80bc2-0a13-4da4-9c08-4a4d8e894b2c",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Trigger').item.json.message.photo[2].file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        192
+      ],
+      "id": "82ddb3a4-a5e2-40fb-9b22-851c28268cdd",
+      "name": "Get Image",
+      "webhookId": "616e5ccc-1c48-4231-9959-005fc39daeb0",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\nYou are **AnnRakshak**, an expert AI food technologist and digital assistant for farmers and distributors. Your mission is to analyze produce conditions and provide clear, actionable advice to prevent food waste and financial loss. Your tone should be knowledgeable, supportive, and easy to understand.\nReply in {{ $('Crop Description').item.json.data['Which language would you prefer for our conversation? By default, I will reply in Hindi.(आप हमारी बातचीत के लिए कौन सी भाषा पसंद करेंगे? डिफ़ॉल्ट रूप से, मैं हिंदी में जवाब दूँगा।)'] }} language if not mention then in hindi.\nGive a summary of whole reply at last.\n\n**CONTEXT:**\nYou will be given two critical pieces of information:\nUser Description:\n{{ $('Crop Description').item.json.data['To give you the best analysis, please provide all the following details about your produce in a single message:  1. Produce Details: Name, variety (if known), and approximate quantity (example: Tomatoes, Desi variety, 50 kg). 2. Condition: Describe its texture (firm, soft, wrinkled) and any unusual smell (sour, musty). Also, please mention the harvest or purchase date. 3. Storage and Location: Tell me how it is stored (example: cold storage, open shed, jute bags). 4. Your Main Question: What is your primary concern? (example: How long will this last, How can I stop the black spots, Is this safe to sell).  (आपको सबसे अच्छा विश्लेषण देने के लिए, कृपया एक ही संदेश में अपनी उपज के बारे में निम्नलिखित सभी विवरण प्रदान करें:  1. उपज का विवरण: नाम, किस्म (यदि ज्ञात हो), और अनुमानित मात्रा (उदाहरण: टमाटर, देसी किस्म, 50 किलो)। 2. स्थिति: इसकी बनावट (ठोस, नरम, झुर्रीदार) और किसी भी असामान्य गंध (खट्टी, सीलन) का वर्णन करें। साथ ही, कृपया कटाई या खरीद की तारीख बताएं। 3. भंडारण और स्थान: मुझे बताएं कि इसे कैसे संग्रहीत किया गया है (उदाहरण: कोल्ड स्टोरेज, खुला शेड, जूट की बोरियां)। 4. आपका मुख्य प्रश्न: आपकी मुख्य चिंता क्या है? (उदाहरण: यह कितने समय तक चलेगा, मैं काले धब्बों को कैसे रोक सकता हूँ, क्या इसे बेचना सुरक्षित है))'] }}\n2.  **Live Weather Data:** \n{{ $json.message.content }}\n**TASK:**\nYour task is to act as an expert analyst. First, synthesize the user's report with the weather data. Then, generate a clear, point-wise response that addresses the user's concerns. The entire response must be in the language specified by the user's preference:. If no language is specified, default to **Hindi**.\n\n**RESPONSE FORMAT:**\nGenerate the response using the following markdown structure precisely. Do not deviate from these headings.\n\n***\n\n**🌿 AnnRakshak Analysis Report (अन्नरक्षक विश्लेषण रिपोर्ट) 🌿**\n\n**1. Shelf Life Prediction (अनुमानित शेल्फ लाइफ):**\n*   **Estimated Remaining Shelf Life:** [Provide a specific, realistic time frame, e.g., \"3-4 days,\" \"Less than 48 hours,\" \"6-7 days.\"]\n*   **Confidence Level:** [State your confidence in the prediction, e.g., \"High,\" \"Medium,\" \"Low.\"]\n*   **Key Factors:** [Briefly explain *why*, e.g., \"Based on the observed firmness and the upcoming cool, dry weather...\"]\n\n**2. Spoilage Risk Assessment (खराब होने का जोखिम):**\n*   **Current Risk Level:** [Choose one: **Low**, **Medium**, or **High**.]\n*   **Primary Threats:** [List the main spoilage risks, e.g., \"Fungal growth (mold) due to high humidity,\" \"Accelerated ripening from high ambient temperatures,\" \"Bacterial soft rot on bruised items.\"]\n\n**3. Actionable Recommendations (कार्यवाही के लिए सुझाव):**\n*   **Immediate Storage Actions:** [Provide the most critical storage advice first. e.g., \"Immediately increase air circulation using fans,\" \"Move produce to a shaded, cooler area away from direct sunlight.\"]\n*   **Handling and Sorting:** [Give practical advice. e.g., \"Gently sort the batch and remove any soft, discolored, or damaged items to prevent spread.\"]\n*   **Transport Plan:** [Provide advice for future transport. e.g., \"Plan to transport this batch during the cooler early morning or overnight hours.\"]\n*   **Value-Add Preservation:** [Suggest ways to prevent total loss. e.g., \"Consider selling the ripest produce immediately at a discount,\" \"The most mature items can be processed into paste/puree.\"]\n\n**4. 🔴 Urgent Alerts (तत्काल चेतावनी):**\n*   [**This section is critical.** If you detect an immediate, high-priority threat, state it clearly. For example: \"🔴 **IMMEDIATE ACTION REQUIRED:** Visible mold detected. This can spread rapidly. Separate the entire batch for sorting right now.\"]\n*   [If there are no critical threats, state: \"No urgent alerts at this time. Following the recommendations above is sufficient to maintain quality.\"]\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        528,
+        -80
+      ],
+      "id": "24df2756-6b38-46b8-b5c6-b6ac46907ec9",
+      "name": "Ai response to description"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        416
+      ],
+      "id": "6e9a9afb-82e7-4890-a7ca-0aca24007171",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "S0s1AM38bagCrSpe",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        416
+      ],
+      "id": "c550564d-a66e-46f8-b50e-38698a6e4b04",
+      "name": "Get Audio",
+      "webhookId": "616e5ccc-1c48-4231-9959-005fc39daeb0",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        576
+      ],
+      "id": "32788766-a0f0-4e67-8a62-0f6c1439e3cd",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wm08nua0bvTM9byy",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -912,
+        208
+      ],
+      "id": "afcb978f-f3c4-47cf-a8eb-bf71c27579b3",
+      "name": "Trigger",
+      "webhookId": "7dc37a75-a0b3-44b2-8562-64890f09fadd",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "61711104-4f5b-416b-a482-f81b2589d3ff"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e85347e3-477e-4d64-b422-969650faad6c",
+                    "leftValue": "={{ $json.message.photo[1].file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Photo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "972d45ef-12aa-4d03-b2d1-6251d003977a",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9e7b814d-d8c4-4cd4-bd6e-50d99ab7f4ee",
+                    "leftValue": "={{ $json.message.video.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Video"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -736,
+        176
+      ],
+      "id": "3fe6597f-a438-454f-af1c-dc2c73dd26cf",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Trigger').item.json.message.video.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        736
+      ],
+      "id": "1cf55b4e-608f-4e0d-9cc4-728dc5ed1b13",
+      "name": "Get a file",
+      "webhookId": "459227ee-7718-41a5-a465-34e2dd655576",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "=\nYou are **AnnRakshak**, a highly advanced AI food technologist. Your core capability is performing holistic, multimodal assessments of fresh produce by analyzing video, audio, text descriptions, and environmental data. Your mission is to provide an expert-level, actionable report to help farmers and distributors minimize waste and make critical supply chain decisions. Your tone must be authoritative, clear, and supportive.\n\n**CONTEXT:**\nYou will receive a comprehensive data packet for analysis:\n1.  **Video File:** An uploaded video that may contain both visual footage of the produce and a spoken audio description from the user.\n2.  **User's Written Description(if provided):** \n{{ $('Crop Description2').item.json.data['To give you the best analysis, please provide all the following details about your produce in a single message:  1. Produce Details: Name, variety (if known), and approximate quantity (example: Tomatoes, Desi variety, 50 kg). 2. Condition: Describe its texture (firm, soft, wrinkled) and any unusual smell (sour, musty). Also, please mention the harvest or purchase date. 3. Storage and Location: Tell me how it is stored (example: cold storage, open shed, jute bags). 4. Your Main Question: What is your primary concern? (example: How long will this last, How can I stop the black spots, Is this safe to sell).  (आपको सबसे अच्छा विश्लेषण देने के लिए, कृपया एक ही संदेश में अपनी उपज के बारे में निम्नलिखित सभी विवरण प्रदान करें:  1. उपज का विवरण: नाम, किस्म (यदि ज्ञात हो), और अनुमानित मात्रा (उदाहरण: टमाटर, देसी किस्म, 50 किलो)। 2. स्थिति: इसकी बनावट (ठोस, नरम, झुर्रीदार) और किसी भी असामान्य गंध (खट्टी, सीलन) का वर्णन करें। साथ ही, कृपया कटाई या खरीद की तारीख बताएं। 3. भंडारण और स्थान: मुझे बताएं कि इसे कैसे संग्रहीत किया गया है (उदाहरण: कोल्ड स्टोरेज, खुला शेड, जूट की बोरियां)। 4. आपका मुख्य प्रश्न: आपकी मुख्य चिंता क्या है? (उदाहरण: यह कितने समय तक चलेगा, मैं काले धब्बों को कैसे रोक सकता हूँ, क्या इसे बेचना सुरक्षित है))'] }}\n3.  **Live Weather Data:**\n{{ $('Weather description').item.json.message.content }}\n**TASK:**\nYour task is to conduct a complete multimodal analysis.\n1.  **Visual Analysis (from video):** Use computer vision to analyze the video frames. Identify the produce type. Detect and document all visual signs of quality and spoilage (e.g., discoloration, mold, shriveling, bruising, physical damage, uniformity).[1]\n2.  **Audio Analysis (from video):** Transcribe and analyze any spoken words in the video's audio track. Extract key details about the produce's history, storage conditions, smell, texture, or the user's specific concerns.\n3.  **Synthesize All Data:** Integrate your findings from the visual analysis, audio analysis, the user's written description, and the live weather data. Cross-reference all inputs to build a complete picture. For example, if the user mentions a \"musty smell\" and the video shows slight discoloration, connect these facts.\n4.  **Generate a Holistic Report:** Create a clear, point-wise response in the language specified by the user:. If no language is specified, default to **Hindi**.\n\n**RESPONSE FORMAT:**\nGenerate the report using the following markdown structure precisely. Do not deviate from these headings.\n*Give Response in {{ $('Crop Description2').item.json.data['Which language would you prefer for our conversation? By default, I will reply in Hindi.(आप हमारी बातचीत के लिए कौन सी भाषा पसंद करेंगे? डिफ़ॉल्ट रूप से, मैं हिंदी में जवाब दूँगा।)'] }} language if not mention then in Hindi.*\n*Give a Summary of Answer at Last*\n\n***\n\n**🌿 AnnRakshak Multimodal Analysis Report (अन्नरक्षक मल्टीमॉडल विश्लेषण रिपोर्ट) 🌿**\n\n**1. Overall Assessment Summary (समग्र मूल्यांकन सारांश):**\n*   **Produce Identified:** [e.g., \"Potatoes, likely a common storage variety.\"]\n*   **Freshness Rating:** [Choose one: **Fresh**, **At Risk**, or **Spoiled**.]\n*   **Primary Spoilage Indicators:** [List the top 1-3 signs you detected, e.g., \"Visible sprouting,\" \"Spoken description of a 'damp smell',\" \"Bruising visible on ~15% of items.\"]\n\n**2. Detailed Findings (विस्तृत निष्कर्ष):**\n*   **From Video (Visual):** [Describe what you saw. e.g., \"The video shows potatoes with early-stage sprouting. Some items have dark, compressed spots, indicating pressure bruising.\"]\n*   **From Audio (Spoken):** [Summarize key spoken points. e.g., \"You mentioned they have been stored for 'three weeks' in 'jute bags' and that the storage area is 'a bit damp.'\"]\n*   **From Weather Data:** [Connect weather to the situation. e.g., \"The forecast shows high humidity (>85%) for the next 48 hours, which will accelerate sprouting and risk of rot.\"]\n\n**3. Predicted Shelf Life & Risk Analysis (अनुमानित शेल्फ लाइफ और जोखिम विश्लेषण):**\n*   **Estimated Remaining Shelf Life:** [Provide a specific time frame, e.g., \"3-5 days before significant quality loss.\"]\n*   **Current Risk Level:** [Choose one: **Low**, **Medium**, or **High**.]\n*   **Primary Threat:** [State the main problem clearly, e.g., \"The combination of dampness mentioned in the audio and visible sprouting puts the batch at high risk for widespread bacterial soft rot.\"]\n\n**4. Actionable Recommendations (कार्यवाही के लिए सुझाव):**\n*   **Immediate Sorting & Handling:** [Give urgent advice. e.g., \"Immediately sort the entire batch. Discard any potatoes that are soft, green, or have a foul odor. Separate the sprouted potatoes for quickest sale/use.\"]\n*   **Storage Environment Correction:** [Provide specific environmental advice. e.g., \"Move the healthy, un-sprouted potatoes to a cool, dark, and very dry location with good air circulation. Aim for a temperature below 10°C.\"]\n*   **Downstream Actions:** [Advise on what to do with the produce. e.g., \"The potatoes with minor sprouts should be prioritized for immediate sale or processing. The healthy portion of the batch, if stored correctly, can be sold over the next week.\"]\n\n**5. 🔴 Urgent Alerts (तत्काल चेतावनी):**\n*   [If multiple data points (e.g., video + audio) indicate a severe threat, state it clearly. For example: \"🔴 **IMMEDIATE ACTION REQUIRED:** The visible sprouting combined with the 'damp' storage conditions you described creates a critical risk for rapid spoilage. The entire batch needs immediate inspection and sorting to prevent significant financial loss.\"]\n*   [If no critical threats are detected, state: \"No critical alerts at this time, but immediate action on the recommendations above is necessary to prevent the 'At Risk' produce from becoming 'Spoiled.'\"]\n",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        736,
+        736
+      ],
+      "id": "809df133-0b6b-4acb-9bba-c8bf020c7a41",
+      "name": "Analyze video",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "S0s1AM38bagCrSpe",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        -80
+      ],
+      "id": "b6aec6a2-e274-488c-9941-0ea2c3c77d67",
+      "name": "Send a text message",
+      "webhookId": "e6ce5061-6f15-4c09-b328-e648a2d4a5f3",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\nYou are **AnnRakshak**, an expert AI food technologist and supply chain monitor. Your sole task is to analyze a user's transcribed audio description of their produce and provide the most accurate possible report based on that information alone. Your persona is knowledgeable, supportive, and transparent about the limitations of the analysis.(Reply in the language of transcribed description for eg.English,Hindi, Haryanvi,Punjabi etc)\n\n**CONTEXT:**\nYou will be provided with a plain text transcription of a user's spoken description. No other data is available. Your entire analysis must be derived from this text.\n\n**USER'S TRANSCRIBED DESCRIPTION:\n{{ $json.content.parts[0].text }}\n**TASK:**\nYour task is to perform an expert analysis of the provided text.\n1.  **Analyze the Transcription:** Carefully read the user's description. Extract all key details: produce type, age, quantity, storage conditions, and any sensory information (e.g., \"feels soft,\" \"smells strange,\" \"has spots\").\n2.  **Generate a Report:** Create a concise, point-wise response in the language of the user's transcribed input. If the language is ambiguous, default to **Hindi**. Acknowledge within the report that the analysis is based only on the provided description.\n\n**RESPONSE FORMAT:**\nGenerate the response using the following markdown structure precisely. Do not deviate from these headings.\n**Reply in USER'S TRANSCRIBED DESCRIPTION Language if not understandable then in hindi language.\n\n\n***\n\n**🌿 AnnRakshak Analysis Report (अन्नरक्षक विश्लेषण रिपोर्ट) 🌿**\n\n**1. Summary of Your Description (आपके विवरण का सारांश):**\n*   **Produce Identified:** [State the produce you understood from the text, e.g., \"Tomatoes,\" \"Onions.\"]\n*   **Key Details Provided:** [Summarize the main points from the text, e.g., \"You mentioned the tomatoes have been stored for 5 days and are starting to feel soft,\" \"You described the storage area as a 'cool room.'\"]\n\n**2. Estimated Shelf Life (अनुमानित शेल्फ लाइफ):**\n*   **Estimated Remaining Shelf Life:** [Provide a specific time frame, e.g., \"2-3 days,\" \"Approximately 1 week.\"]\n*   **Important Note:** [State clearly: \"This prediction is based on your description alone. Environmental factors like exact temperature and humidity can alter this estimate significantly.\"]\n\n**3. Spoilage Risk Assessment (खराब होने का जोखिम):**\n*   **Current Risk Level:** [Choose one: **Low**, **Medium**, or **High**, based on the user's words.]\n*   **Primary Threats:** [List the main risks identified from the text, e.g., \"Risk of bacterial rot, as indicated by the 'soft spots',\" \"Risk of wilting if airflow is poor.\"]\n\n**4. Actionable Recommendations (कार्यवाही के लिए सुझाव):**\n*   **Immediate Actions:** [Give the most critical advice based on the description. e.g., \"Based on your description of 'soft spots,' it is highly recommended to sort the batch immediately and remove any affected items.\"]\n*   **Optimal Storage Advice:** [Provide general best practices. e.g., \"For tomatoes of this type, try to maintain a storage temperature around 10-13°C and ensure good ventilation.\"]\n*   **Monitoring:** [Suggest future actions. e.g., \"Continue to check the batch daily for any changes in texture or smell.\"]\n\n**5. 🔴 Urgent Alerts (तत्काल चेतावनी):**\n*   [If the transcription contains keywords indicating a severe, immediate threat (e.g., \"rotting,\" \"mold,\" \"strong sour smell\"), state it clearly. For example: \"🔴 **IMMEDIATE ACTION REQUIRED:** The details you provided strongly suggest active spoilage. You must inspect and sort the entire batch now to prevent a total loss.\"]\n*   [If the description does not suggest a critical threat, state: \"No urgent alerts based on your description. Following the recommendations above is the best course of action.\"]\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        240,
+        416
+      ],
+      "id": "9875ae61-2502-4dfa-9e2b-52b644ddff39",
+      "name": "Ai response to audio"
+    },
+    {
+      "parameters": {
+        "operation": "5DayForecast",
+        "cityName": "={{ $json.data['Your city?(आपका शहर)'] }}",
+        "language": "English"
+      },
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        -80
+      ],
+      "id": "c602995f-6980-4ce3-9a78-2e52487ee50d",
+      "name": "OpenWeatherMap",
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "T0st8kJDr9Ihm3TG",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Role: You are an AI assistant specializing in weather data analysis.\nNote-(City-{{ $json.city.name }})\nTask: Convert the following raw JSON weather forecast data into a clear, human-readable, day-by-day summary. The summary should be detailed but easy to understand, focusing on the key weather conditions that would affect food spoilage.\n\nInstructions:\n\nAnalyze the provided JSON data, which contains a 5-day forecast in 3-hour intervals for the city of Mumbai.\n\nGroup the forecast entries by date.\n\nFor each day, generate a concise summary that includes:\n\nThe date (e.g., Tuesday, September 9, 2025).\n\nA general weather description for the day (e.g., \"Partly cloudy with periods of light rain\").\n\nThe temperature range, showing the highest and lowest temperatures expected for that day.\n\nThe average humidity percentage.\n\nA brief mention of any significant rain or high wind predictions.\n5 day forecast-\n{{ JSON.stringify($json.list) }}\n\ncoordinates-\nlatitude-{{ $json.city.coord.lat }}\nlongitude-{{ $json.city.coord.lon }}\ncountry-{{ $json.city.country }}\ntimezone-{{ $json.city.timezone }}\nsunrise-{{ $json.city.sunrise }}\nsunset-{{ $json.city.sunset }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        176,
+        -80
+      ],
+      "id": "7d017147-191e-4c95-b244-279966264f4a",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "aYGvYxdrWIJGtd2w",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "5DayForecast",
+        "cityName": "={{ $json.data['Your city?(आपका शहर)'] }}",
+        "language": "English"
+      },
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        192
+      ],
+      "id": "5496ff22-ac37-4b81-84df-d0d8be78ca3a",
+      "name": "OpenWeatherMap1",
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "T0st8kJDr9Ihm3TG",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Role: You are an AI assistant specializing in weather data analysis.\ncity-{{ $json.city.name }}\nTask: Convert the following raw JSON weather forecast data into a clear, human-readable, day-by-day summary. The summary should be detailed but easy to understand, focusing on the key weather conditions that would affect food spoilage.\n\nInstructions:\n\nAnalyze the provided JSON data, which contains a 5-day forecast in 3-hour intervals for the city of Mumbai.\n\nGroup the forecast entries by date.\n\nFor each day, generate a concise summary that includes:\n\nThe date (e.g., Tuesday, September 9, 2025).\n\nA general weather description for the day (e.g., \"Partly cloudy with periods of light rain\").\n\nThe temperature range, showing the highest and lowest temperatures expected for that day.\n\nThe average humidity percentage.\n\nA brief mention of any significant rain or high wind predictions.\n5 day forecast-\n{{ JSON.stringify($json.list) }}\ncity-{{ $json.city.name }}\ncoordinates-\nlatitude-{{ $json.city.coord.lat }}\nlongitude-{{ $json.city.coord.lon }}\ncountry-{{ $json.city.country }}\ntimezone-{{ $json.city.timezone }}\nsunrise-{{ $json.city.sunrise }}\nsunset-{{ $json.city.sunset }}\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        192,
+        192
+      ],
+      "id": "df39ea29-f9e9-43ce-8ede-d3fdc98b53eb",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wm08nua0bvTM9byy",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "5DayForecast",
+        "cityName": "={{ $json.data['Your city?(आपका शहर)'] }}",
+        "language": "English"
+      },
+      "type": "n8n-nodes-base.openWeatherMap",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        736
+      ],
+      "id": "4cac58a4-a9e1-4358-8157-5ed5f44c5f26",
+      "name": "OpenWeatherMap2",
+      "credentials": {
+        "openWeatherMapApi": {
+          "id": "T0st8kJDr9Ihm3TG",
+          "name": "OpenWeatherMap account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.content.parts[0].text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        192
+      ],
+      "id": "e32deda9-e2bd-480e-91c2-e627830e5a0d",
+      "name": "Send a text message1",
+      "webhookId": "90e13b8f-2cb9-4179-8452-ab90458ba591",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        416
+      ],
+      "id": "67d87d5e-8c4c-45e0-b44a-34f04715e22c",
+      "name": "Reply Of Audio",
+      "webhookId": "3fe53e2e-12cf-480a-9ba6-61d26a7e62e5",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.content.parts[0].text }}",
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        944,
+        736
+      ],
+      "id": "4a7b3df9-5915-41ba-af6b-1f7eab97e00d",
+      "name": "Reply of video",
+      "webhookId": "0a8eb5b2-b0b4-422b-8264-b4121b1c72fc",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Role: You are an AI assistant specializing in weather data analysis.\nnote-(city-{{ $json.city.name }})\n\nTask: Convert the following raw JSON weather forecast data into a clear, human-readable, day-by-day summary. The summary should be detailed but easy to understand, focusing on the key weather conditions that would affect food spoilage.\n\nInstructions:\n\nAnalyze the provided JSON data, which contains a 5-day forecast in 3-hour intervals for the city of Mumbai.\n\nGroup the forecast entries by date.\n\nFor each day, generate a concise summary that includes:\n\nThe date (e.g., Tuesday, September 9, 2025).\n\nA general weather description for the day (e.g., \"Partly cloudy with periods of light rain\").\n\nThe temperature range, showing the highest and lowest temperatures expected for that day.\n\nThe average humidity percentage.\n\nA brief mention of any significant rain or high wind predictions.\n5 day forecast-\n{{ JSON.stringify($json.list) }}\n\ncoordinates-\nlatitude-{{ $json.city.coord.lat }}\nlongitude-{{ $json.city.coord.lon }}\ncountry-{{ $json.city.country }}\ntimezone-{{ $json.city.timezone }}\nsunrise-{{ $json.city.sunrise }}\nsunset-{{ $json.city.sunset }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        160,
+        736
+      ],
+      "id": "38666ad8-80fa-4887-be0d-f3f13b1f0eb9",
+      "name": "Weather description",
+      "credentials": {
+        "openAiApi": {
+          "id": "wm08nua0bvTM9byy",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Trigger').item.json.message.chat.id }}",
+        "message": "Welcome to AnnRakshak! 🌱\n\nI'm here to help you assess your produce and prevent spoilage. To get started, please fill out this short form with details about your produce. It will only take a minute.\nYou don't have to fill out all the details, but providing more information will help me give you the most accurate recommendations. Once you submit, I'll analyze the information and provide a real-time assessment.\n\nअन्नरक्षक में आपका स्वागत है! 🌱\n\nमैं आपकी उपज का मूल्यांकन करने और उसे खराब होने से बचाने में मदद करने के लिए यहाँ हूँ। शुरू करने के लिए, कृपया इस छोटे से फॉर्म को अपनी उपज के विवरण के साथ भरें। इसमें केवल एक मिनट लगेगा।\nआपको सभी विवरण भरने की आवश्यकता नहीं है, लेकिन अधिक जानकारी प्रदान करने से मुझे आपको सबसे सटीक सुझाव देने में मदद मिलेगी। फॉर्म जमा करने के बाद, मैं जानकारी का विश्लेषण करूँगा और आपको तुरंत मूल्यांकन प्रदान करूँगा।",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Which language would you prefer for our conversation? By default, I will reply in Hindi.(आप हमारी बातचीत के लिए कौन सी भाषा पसंद करेंगे? डिफ़ॉल्ट रूप से, मैं हिंदी में जवाब दूँगा।)",
+              "placeholder": "Haryanvi (हरियाणवी),Punjabi (ਪੰਜਾਬੀ / पंजाबी),Gujarati (ગુજરાતી / गुजराती)...."
+            },
+            {
+              "fieldLabel": "To give you the best analysis, please provide all the following details about your produce in a single message:  1. Produce Details: Name, variety (if known), and approximate quantity (example: Tomatoes, Desi variety, 50 kg). 2. Condition: Describe its texture (firm, soft, wrinkled) and any unusual smell (sour, musty). Also, please mention the harvest or purchase date. 3. Storage and Location: Tell me how it is stored (example: cold storage, open shed, jute bags). 4. Your Main Question: What is your primary concern? (example: How long will this last, How can I stop the black spots, Is this safe to sell).  (आपको सबसे अच्छा विश्लेषण देने के लिए, कृपया एक ही संदेश में अपनी उपज के बारे में निम्नलिखित सभी विवरण प्रदान करें:  1. उपज का विवरण: नाम, किस्म (यदि ज्ञात हो), और अनुमानित मात्रा (उदाहरण: टमाटर, देसी किस्म, 50 किलो)। 2. स्थिति: इसकी बनावट (ठोस, नरम, झुर्रीदार) और किसी भी असामान्य गंध (खट्टी, सीलन) का वर्णन करें। साथ ही, कृपया कटाई या खरीद की तारीख बताएं। 3. भंडारण और स्थान: मुझे बताएं कि इसे कैसे संग्रहीत किया गया है (उदाहरण: कोल्ड स्टोरेज, खुला शेड, जूट की बोरियां)। 4. आपका मुख्य प्रश्न: आपकी मुख्य चिंता क्या है? (उदाहरण: यह कितने समय तक चलेगा, मैं काले धब्बों को कैसे रोक सकता हूँ, क्या इसे बेचना सुरक्षित है))",
+              "placeholder": "Describe your crop condition (अपनी फसल की स्थिति का वर्णन करें)"
+            },
+            {
+              "fieldLabel": "Your city?(आपका शहर)",
+              "placeholder": "Meerut (मेरठ),Ludhiana (लुधियाना),Nagpur (नागपुर)...",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -256,
+        192
+      ],
+      "id": "aca7ce13-5d56-4bc1-b9b5-48821162e40e",
+      "name": "Crop Description1",
+      "webhookId": "14d80bc2-0a13-4da4-9c08-4a4d8e894b2c",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $json.message.chat.id }}",
+        "message": "Welcome to AnnRakshak! 🌱\n\nI'm here to help you assess your produce and prevent spoilage. To get started, please fill out this short form with details about your produce. It will only take a minute.\nYou don't have to fill out all the details, but providing more information will help me give you the most accurate recommendations. Once you submit, I'll analyze the information and provide a real-time assessment.\n\nअन्नरक्षक में आपका स्वागत है! 🌱\n\nमैं आपकी उपज का मूल्यांकन करने और उसे खराब होने से बचाने में मदद करने के लिए यहाँ हूँ। शुरू करने के लिए, कृपया इस छोटे से फॉर्म को अपनी उपज के विवरण के साथ भरें। इसमें केवल एक मिनट लगेगा।\nआपको सभी विवरण भरने की आवश्यकता नहीं है, लेकिन अधिक जानकारी प्रदान करने से मुझे आपको सबसे सटीक सुझाव देने में मदद मिलेगी। फॉर्म जमा करने के बाद, मैं जानकारी का विश्लेषण करूँगा और आपको तुरंत मूल्यांकन प्रदान करूँगा।",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Which language would you prefer for our conversation? By default, I will reply in Hindi.(आप हमारी बातचीत के लिए कौन सी भाषा पसंद करेंगे? डिफ़ॉल्ट रूप से, मैं हिंदी में जवाब दूँगा।)",
+              "placeholder": "Haryanvi (हरियाणवी),Punjabi (ਪੰਜਾਬੀ / पंजाबी),Gujarati (ગુજરાતી / गुजराती)...."
+            },
+            {
+              "fieldLabel": "To give you the best analysis, please provide all the following details about your produce in a single message:  1. Produce Details: Name, variety (if known), and approximate quantity (example: Tomatoes, Desi variety, 50 kg). 2. Condition: Describe its texture (firm, soft, wrinkled) and any unusual smell (sour, musty). Also, please mention the harvest or purchase date. 3. Storage and Location: Tell me how it is stored (example: cold storage, open shed, jute bags). 4. Your Main Question: What is your primary concern? (example: How long will this last, How can I stop the black spots, Is this safe to sell).  (आपको सबसे अच्छा विश्लेषण देने के लिए, कृपया एक ही संदेश में अपनी उपज के बारे में निम्नलिखित सभी विवरण प्रदान करें:  1. उपज का विवरण: नाम, किस्म (यदि ज्ञात हो), और अनुमानित मात्रा (उदाहरण: टमाटर, देसी किस्म, 50 किलो)। 2. स्थिति: इसकी बनावट (ठोस, नरम, झुर्रीदार) और किसी भी असामान्य गंध (खट्टी, सीलन) का वर्णन करें। साथ ही, कृपया कटाई या खरीद की तारीख बताएं। 3. भंडारण और स्थान: मुझे बताएं कि इसे कैसे संग्रहीत किया गया है (उदाहरण: कोल्ड स्टोरेज, खुला शेड, जूट की बोरियां)। 4. आपका मुख्य प्रश्न: आपकी मुख्य चिंता क्या है? (उदाहरण: यह कितने समय तक चलेगा, मैं काले धब्बों को कैसे रोक सकता हूँ, क्या इसे बेचना सुरक्षित है))",
+              "placeholder": "Describe your crop condition (अपनी फसल की स्थिति का वर्णन करें)"
+            },
+            {
+              "fieldLabel": "Your city?(आपका शहर)",
+              "placeholder": "Meerut (मेरठ),Ludhiana (लुधियाना),Nagpur (नागपुर)...",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -288,
+        736
+      ],
+      "id": "02fbc7b6-d62f-436b-bb71-4e2cf9cb8eae",
+      "name": "Crop Description2",
+      "webhookId": "14d80bc2-0a13-4da4-9c08-4a4d8e894b2c",
+      "credentials": {
+        "telegramApi": {
+          "id": "5tR3nTLxAKqNl529",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ai response to description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crop Description": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image": {
+      "main": [
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Ai response to audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ai response to audio",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Crop Description",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crop Description1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crop Description2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Analyze video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ai response to description": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze video": {
+      "main": [
+        [
+          {
+            "node": "Reply of video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ai response to audio": {
+      "main": [
+        [
+          {
+            "node": "Reply Of Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Ai response to description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap1": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Get Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap2": {
+      "main": [
+        [
+          {
+            "node": "Weather description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weather description": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crop Description1": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crop Description2": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ab69ae62-8226-42c7-8ea4-83ef069808aa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5f02ec935420781e6d8d1c01f482fc2921162dc24f87346ae3b6fe59c489e705"
+  },
+  "id": "HoavAEnwggOhSCjI",
+  "tags": []
+}
