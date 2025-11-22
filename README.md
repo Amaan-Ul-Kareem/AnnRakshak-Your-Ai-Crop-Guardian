@@ -48,6 +48,7 @@ This project is built on N8N and can be easily reproduced.
 2. Import Workflow: Download the `AnnRakshak.json` file from this repository. In your N8N canvas, go to `File > Import from File` and select the downloaded JSON file.
 3. Add Credentials: The workflow requires credentials for the following services. You will need to add your own API keys in the "Credentials" section of N8N:
     *   Telegram Bot API
+    *   Gemini API
     *   OpenAI API
     *   OpenWeatherMap API
 4.  Activate Workflow: Once the credentials are in place, activate the workflow. Your bot is now live and ready to respond to messages on Telegram.
