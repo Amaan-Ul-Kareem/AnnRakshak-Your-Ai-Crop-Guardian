@@ -1,7 +1,7 @@
 # AnnRakshak-Your-Ai-Crop-Guardian
 AnnRakshak: Your AI-Powered Crop Guardian
 
-Demo Video Link : https://youtube.com/shorts/pCDFjn9BuuI?feature=share
+Demo Video Link : https://youtube.com/shorts/3o5YOUMAyEQ
 
 AnnRakshak is an AI-powered Telegram bot designed to serve as a digital assistant for Indian farmers and distributors. It helps them monitor produce freshness, predict spoilage in real-time, and get actionable recommendations to reduce food waste and prevent financial loss. This project is a submission for the OpenAI NextWave Buildathon 2025.
 
