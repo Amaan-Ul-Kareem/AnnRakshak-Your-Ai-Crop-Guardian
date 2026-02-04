@@ -1,5 +1,4 @@
 # AnnRakshak-Your-Ai-Crop-Guardian
-AnnRakshak: Your AI-Powered Crop Guardian
 
 Demo Video Link : https://youtube.com/shorts/3o5YOUMAyEQ
 
